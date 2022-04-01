@@ -4,6 +4,7 @@ exports.Player = void 0;
 var Player = /** @class */ (function () {
     function Player(attachedObject) {
         this.attachedObject = attachedObject;
+        this.landed = false;
     }
     Player.prototype.getAttachedObject = function () {
         return this.attachedObject;
@@ -19,6 +20,12 @@ var Player = /** @class */ (function () {
     };
     Player.prototype.moveDown = function (displacement) {
         this.attachedObject.y += displacement;
+    };
+    Player.prototype.hasLanded = function (landingStatus) {
+        this.landed = landingStatus;
+    };
+    Player.prototype.isLanded = function () {
+        return this.landed;
     };
     return Player;
 }());
