@@ -1,24 +1,8 @@
-import { WorldObject, WorldObjectType } from "../world";
+import { Movable } from "./base/movable";
 
-export class Player {
+export class Player extends Movable {
   private landed = false;
 
-  constructor(private attachedObject: WorldObject) {}
-  getAttachedObject(): WorldObject {
-    return this.attachedObject;
-  }
-  moveLeft(displacement: number) {
-    this.attachedObject.x -= displacement;
-  }
-  moveRight(displacement: number) {
-    this.attachedObject.x += displacement;
-  }
-  moveUp(displacement: number) {
-    this.attachedObject.y -= displacement;
-  }
-  moveDown(displacement: number) {
-    this.attachedObject.y += displacement;
-  }
   hasLanded(landingStatus: boolean) {
     this.landed = landingStatus;
   }
