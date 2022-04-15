@@ -39,3 +39,13 @@ test("world object has coordinates", () => {
   expect(playerObject.x).toBe(100);
   expect(playerObject.y).toBe(100);
 });
+
+test("add helipad to world", () => {
+  const heliPad: WorldObject = {
+    objectType: WorldObjectType.HELIPAD,
+    x: 100,
+    y: 100,
+  };
+  world.push(heliPad);
+  expect(world).toContain(heliPad);
+});

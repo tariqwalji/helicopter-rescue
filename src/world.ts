@@ -1,6 +1,7 @@
 export enum WorldObjectType {
   PLAYER,
   RESCUEE,
+  HELIPAD
 }
 
 export interface WorldObject {

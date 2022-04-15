@@ -5,5 +5,6 @@ var WorldObjectType;
 (function (WorldObjectType) {
     WorldObjectType[WorldObjectType["PLAYER"] = 0] = "PLAYER";
     WorldObjectType[WorldObjectType["RESCUEE"] = 1] = "RESCUEE";
+    WorldObjectType[WorldObjectType["HELIPAD"] = 2] = "HELIPAD";
 })(WorldObjectType = exports.WorldObjectType || (exports.WorldObjectType = {}));
 //# sourceMappingURL=world.js.map
