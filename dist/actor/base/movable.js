@@ -20,6 +20,12 @@ var Movable = /** @class */ (function () {
     Movable.prototype.moveDown = function (displacement) {
         this.attachedObject.y += displacement;
     };
+    Movable.prototype.hasCollidedWith = function (target) {
+        return (this.attachedObject.x < target.x + target.width) &&
+            (this.attachedObject.x + this.attachedObject.width > target.x) &&
+            (this.attachedObject.y < (target.y + target.height) &&
+                (this.attachedObject.y + this.attachedObject.width > target.y));
+    };
     return Movable;
 }());
 exports.Movable = Movable;

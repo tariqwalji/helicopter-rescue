@@ -13,12 +13,16 @@ beforeEach(() => {
     objectType: WorldObjectType.RESCUEE,
     x: 100,
     y: 100,
+    width: 10,
+    height: 10,
   };
 
   playerObj = {
     objectType: WorldObjectType.PLAYER,
     x: 110,
     y: 100,
+    width: 10,
+    height: 10,
   };
 
   player = new Player(playerObj);
@@ -48,12 +52,16 @@ test("moves left towards player if player has landed", () => {
     objectType: WorldObjectType.RESCUEE,
     x: 100,
     y: 100,
+    width: 100,
+    height: 100,
   };
 
   playerObj = {
     objectType: WorldObjectType.PLAYER,
     x: 90,
     y: 100,
+    width: 100,
+    height: 100,
   };
 
   player = new Player(playerObj);
@@ -76,12 +84,16 @@ test("rescuee gets rescued if at helicopter coordinates", () => {
     objectType: WorldObjectType.RESCUEE,
     x: 92,
     y: 100,
+    width: 100,
+    height: 100,
   };
 
   playerObj = {
     objectType: WorldObjectType.PLAYER,
     x: 90,
     y: 100,
+    width: 100,
+    height: 100,
   };
 
   player = new Player(playerObj);

@@ -17,4 +17,10 @@ export class Movable {
   moveDown(displacement: number) {
     this.attachedObject.y += displacement;
   }
+  hasCollidedWith(target: WorldObject) {
+    return (this.attachedObject.x < target.x + target.width) &&
+            (this.attachedObject.x + this.attachedObject.width > target.x) &&
+            (this.attachedObject.y < (target.y + target.height) &&
+            (this.attachedObject.y + this.attachedObject.width > target.y))
+  }
 }
