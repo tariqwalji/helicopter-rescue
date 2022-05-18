@@ -1,25 +1,29 @@
-import { WorldObject, WorldObjectType } from "./world";
+import {WorldManager, WorldObject, WorldObjectType} from "./world";
+import {Player} from "./actor/player";
 
-let world: WorldObject[];
+let world: WorldManager;
+let player: Player;
 
 beforeEach(() => {
-  world = [];
-});
-
-test("create empty world", () => {
-  expect(world).toStrictEqual([]);
-});
-
-test("populate empty world with player", () => {
-  const playerObject: WorldObject = {
-    objectType: WorldObjectType.PLAYER,
-    x: 0,
-    y: 0,
-    width: 10,
-    height: 10,
+  let playerObject: WorldObject
+  playerObject = {
+      objectType: WorldObjectType.PLAYER,
+      x: 0,
+      y: 0,
+      width: 10,
+      height: 10,
   };
-  world.push(playerObject);
-  expect(world).toContain(playerObject);
+
+  player = new Player(playerObject);
+  world = new WorldManager(player);
+});
+
+test("create empty world (exception of player)", () => {
+  expect(world.isEmpty()).toBeTruthy();
+});
+
+test("world has a player", () => {
+  expect(world.getPlayer()).toBeDefined();
 });
 
 test("populate empty world with rescuee", () => {
@@ -30,8 +34,8 @@ test("populate empty world with rescuee", () => {
     width: 10,
     height: 10,
   };
-  world.push(rescueeObject);
-  expect(world).toContain(rescueeObject);
+  world.addObject(rescueeObject);
+  expect(world.getObjects()).toContain(rescueeObject);
 });
 
 test("world object has coordinates and dimensions", () => {
@@ -56,19 +60,63 @@ test("add helipad to world", () => {
     width: 10,
     height: 10,
   };
-  world.push(heliPad);
-  expect(world).toContain(heliPad);
+  world.addObject(heliPad);
+  expect(world.getObjects()).toContain(heliPad);
 });
 
 test("can get all helipads", () => {
   for(let i=0; i<10; i++) {
-    world.push({
+    world.addObject({
       objectType: WorldObjectType.HELIPAD,
-      x: 100,
+      x: 100 + (10 * i),
       y: 100,
       width: 10,
       height: 10,
     });
   }
 
+  let helipads = world.getObjectsOfType(WorldObjectType.HELIPAD);
+
+  expect(helipads).toHaveLength(10);
+  helipads.forEach((pad, idx) => {
+    expect(pad.x).toBe(100 + (10 * idx));
+  });
+});
+
+test("fire helipad collision event - mark player landed", () => {
+  world.addObject({
+    objectType: WorldObjectType.HELIPAD,
+    x: 100,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+
+  world.fireHelipadCollisionEvent();
+  expect(player.isLanded()).toBeFalsy();
+
+  player.getAttachedObject().x = 100;
+  world.fireHelipadCollisionEvent();
+  expect(player.isLanded()).toBeTruthy();
+});
+
+test("fire helipad uncollided event - mark player unlanded", () => {
+  world.addObject({
+    objectType: WorldObjectType.HELIPAD,
+    x: 100,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+
+  world.fireHelipadCollisionEvent();
+  expect(player.isLanded()).toBeFalsy();
+
+  player.getAttachedObject().x = 100;
+  world.fireHelipadCollisionEvent();
+  expect(player.isLanded()).toBeTruthy();
+
+  player.getAttachedObject().x = 0;
+  world.fireHelipadCollisionEvent();
+  expect(player.isLanded()).toBeFalsy();
 });
