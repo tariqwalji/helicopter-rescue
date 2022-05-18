@@ -94,3 +94,59 @@ test("movableActor not collided on negative y axis", () => {
   }
   expect(movableActor.hasCollidedWith(target)).toBeFalsy();
 });
+
+test("is able to track collided objects", () => {
+  const target: WorldObject = {
+    objectType: WorldObjectType.HELIPAD,
+    x: 100,
+    y: 90,
+    width: 10,
+    height: 10
+  }
+
+  const target2: WorldObject = {
+    objectType: WorldObjectType.HELIPAD,
+    x: 100,
+    y: 100,
+    width: 10,
+    height: 10
+  }
+
+  expect(movableActor.isCollidedWith(target)).toBeFalsy();
+  expect(movableActor.isCollidedWith(target2)).toBeFalsy();
+
+  movableActor.addCollidedObject(target);
+  movableActor.addCollidedObject(target2);
+
+  expect(movableActor.isCollidedWith(target)).toBeTruthy();
+  expect(movableActor.isCollidedWith(target2)).toBeTruthy();
+});
+
+test("is able to untrack collided objects", () => {
+  const target: WorldObject = {
+    objectType: WorldObjectType.HELIPAD,
+    x: 100,
+    y: 90,
+    width: 10,
+    height: 10
+  }
+
+  const target2: WorldObject = {
+    objectType: WorldObjectType.HELIPAD,
+    x: 100,
+    y: 100,
+    width: 10,
+    height: 10
+  }
+
+  movableActor.addCollidedObject(target);
+  movableActor.addCollidedObject(target2);
+
+  expect(movableActor.isCollidedWith(target)).toBeTruthy();
+  expect(movableActor.isCollidedWith(target2)).toBeTruthy();
+
+  movableActor.removeCollidedObject(target2);
+
+  expect(movableActor.isCollidedWith(target)).toBeTruthy();
+  expect(movableActor.isCollidedWith(target2)).toBeFalsy();
+});

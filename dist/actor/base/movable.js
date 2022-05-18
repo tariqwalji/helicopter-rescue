@@ -4,6 +4,7 @@ exports.Movable = void 0;
 var Movable = /** @class */ (function () {
     function Movable(attachedObject) {
         this.attachedObject = attachedObject;
+        this.collidedObjects = [];
     }
     Movable.prototype.getAttachedObject = function () {
         return this.attachedObject;
@@ -25,6 +26,17 @@ var Movable = /** @class */ (function () {
             (this.attachedObject.x + this.attachedObject.width > target.x) &&
             (this.attachedObject.y < (target.y + target.height) &&
                 (this.attachedObject.y + this.attachedObject.width > target.y));
+    };
+    Movable.prototype.addCollidedObject = function (obj) {
+        if (!this.collidedObjects.includes(obj)) {
+            this.collidedObjects.push(obj);
+        }
+    };
+    Movable.prototype.removeCollidedObject = function (obj) {
+        this.collidedObjects = this.collidedObjects.filter(function (collidedObj) { return collidedObj !== obj; });
+    };
+    Movable.prototype.isCollidedWith = function (obj) {
+        return this.collidedObjects.includes(obj);
     };
     return Movable;
 }());
