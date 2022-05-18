@@ -1,5 +1,5 @@
-import { WorldObject, WorldObjectType } from "../world";
-import { Player } from "./player";
+import {WorldObject, WorldObjectType} from "../world";
+import {Player} from "./player";
 
 let playerObj: WorldObject;
 let player: Player;
@@ -26,17 +26,29 @@ test("mark player as not landed", () => {
   expect(player.isLanded()).toBeFalsy();
 });
 
-/*test("when player collides with helipad, mark as landed", () => {
-  let world: WorldObject[] = [];
-
-  const heliPad: WorldObject = {
+test("handle on helipad event - set player has landed", () => {
+  let helipad: WorldObject = {
     objectType: WorldObjectType.HELIPAD,
-    x: 100,
-    y: 100,
+    x: 10,
+    y: 10,
     width: 10,
-    height: 10,
-  };
-  world.push(heliPad);
+    height: 10
+  }
 
-  expect(player)
-});*/
+  player.handlePlayerOnHelipad(helipad);
+  expect(player.isLanded()).toBeTruthy();
+});
+
+test("handle off helipad event - set player as not landed", () => {
+  let helipad: WorldObject = {
+    objectType: WorldObjectType.HELIPAD,
+    x: 10,
+    y: 10,
+    width: 10,
+    height: 10
+  }
+
+  player.hasLanded(true);
+  player.handlePlayerOffHelipad(helipad);
+  expect(player.isLanded()).toBeFalsy();
+});

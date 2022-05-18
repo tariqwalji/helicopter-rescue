@@ -30,6 +30,12 @@ var Player = /** @class */ (function (_super) {
     Player.prototype.isLanded = function () {
         return this.landed;
     };
+    Player.prototype.handlePlayerOnHelipad = function (helipad) {
+        this.hasLanded(true);
+    };
+    Player.prototype.handlePlayerOffHelipad = function (helipad) {
+        this.hasLanded(false);
+    };
     return Player;
 }(movable_1.Movable));
 exports.Player = Player;
