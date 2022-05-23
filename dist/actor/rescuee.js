@@ -19,9 +19,8 @@ exports.Rescuee = void 0;
 var movable_1 = require("./base/movable");
 var Rescuee = /** @class */ (function (_super) {
     __extends(Rescuee, _super);
-    function Rescuee(player, entityWorldObject) {
-        var _this = _super.call(this, entityWorldObject) || this;
-        _this.player = player;
+    function Rescuee() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.speed = 1;
         _this.hasBeenRescued = false;
         return _this;
@@ -32,10 +31,11 @@ var Rescuee = /** @class */ (function (_super) {
     Rescuee.prototype.setSpeed = function (speedValue) {
         this.speed = speedValue;
     };
-    Rescuee.prototype.moveTowardsPlayer = function () {
-        if (this.player.isLanded()) {
-            if (this.player.getAttachedObject().x !== this.getAttachedObject().x) {
-                if (this.player.getAttachedObject().x < this.getAttachedObject().x) {
+    Rescuee.prototype.updatePosition = function (manager) {
+        var player = manager.getPlayer();
+        if (player.isLanded()) {
+            if (player.getAttachedObject().x !== this.getAttachedObject().x) {
+                if (player.getAttachedObject().x < this.getAttachedObject().x) {
                     this.moveLeft(this.speed);
                 }
                 else {

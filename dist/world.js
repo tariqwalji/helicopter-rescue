@@ -11,12 +11,16 @@ var WorldManager = /** @class */ (function () {
     function WorldManager(player) {
         this.player = player;
         this.world = [];
+        this.selfMovingActors = [];
     }
     WorldManager.prototype.addObject = function (object) {
         this.world.push(object);
     };
+    WorldManager.prototype.addSelfMovingActor = function (actor) {
+        this.selfMovingActors.push(actor);
+    };
     WorldManager.prototype.isEmpty = function () {
-        return this.world.length === 0;
+        return this.world.length == 0;
     };
     WorldManager.prototype.getPlayer = function () {
         return this.player;
@@ -25,7 +29,10 @@ var WorldManager = /** @class */ (function () {
         return this.world;
     };
     WorldManager.prototype.getObjectsOfType = function (objectType) {
-        return this.world.filter(function (obj) { return obj.objectType === objectType; });
+        return this.world.filter(function (obj) { return obj.objectType == objectType; });
+    };
+    WorldManager.prototype.getSelfMovingActors = function () {
+        return this.selfMovingActors;
     };
     WorldManager.prototype.fireHelipadCollisionEvent = function () {
         var _this = this;

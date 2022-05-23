@@ -1,14 +1,27 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Movable = void 0;
-var Movable = /** @class */ (function () {
+var basic_1 = require("./basic");
+var Movable = /** @class */ (function (_super) {
+    __extends(Movable, _super);
     function Movable(attachedObject) {
-        this.attachedObject = attachedObject;
-        this.collidedObjects = [];
+        return _super.call(this, attachedObject) || this;
     }
-    Movable.prototype.getAttachedObject = function () {
-        return this.attachedObject;
-    };
     Movable.prototype.moveLeft = function (displacement) {
         this.attachedObject.x -= displacement;
     };
@@ -21,24 +34,7 @@ var Movable = /** @class */ (function () {
     Movable.prototype.moveDown = function (displacement) {
         this.attachedObject.y += displacement;
     };
-    Movable.prototype.hasCollidedWith = function (target) {
-        return (this.attachedObject.x < target.x + target.width) &&
-            (this.attachedObject.x + this.attachedObject.width > target.x) &&
-            (this.attachedObject.y < (target.y + target.height) &&
-                (this.attachedObject.y + this.attachedObject.width > target.y));
-    };
-    Movable.prototype.addCollidedObject = function (obj) {
-        if (!this.collidedObjects.includes(obj)) {
-            this.collidedObjects.push(obj);
-        }
-    };
-    Movable.prototype.removeCollidedObject = function (obj) {
-        this.collidedObjects = this.collidedObjects.filter(function (collidedObj) { return collidedObj !== obj; });
-    };
-    Movable.prototype.isCollidedWith = function (obj) {
-        return this.collidedObjects.includes(obj);
-    };
     return Movable;
-}());
+}(basic_1.Basic));
 exports.Movable = Movable;
 //# sourceMappingURL=movable.js.map

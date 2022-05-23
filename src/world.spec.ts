@@ -1,5 +1,6 @@
 import {WorldManager, WorldObject, WorldObjectType} from "./world";
 import {Player} from "./actor/player";
+import {Rescuee} from "./actor/rescuee";
 
 let world: WorldManager;
 let player: Player;
@@ -119,4 +120,17 @@ test("fire helipad uncollided event - mark player unlanded", () => {
   player.getAttachedObject().x = 0;
   world.fireHelipadCollisionEvent();
   expect(player.isLanded()).toBeFalsy();
+});
+
+test("can add self moving actor", () => {
+  const r:Rescuee = new Rescuee({
+    objectType: WorldObjectType.RESCUEE,
+    x: 100,
+    y: 0,
+    width: 10,
+    height: 10
+  });
+
+  world.addSelfMovingActor(r);
+  expect(world.getSelfMovingActors()).toContain(r);
 });

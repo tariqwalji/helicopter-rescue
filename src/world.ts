@@ -1,4 +1,5 @@
 import {Player} from "./actor/player";
+import {Movable} from "./actor/base/movable";
 
 export enum WorldObjectType {
   PLAYER,
@@ -15,12 +16,17 @@ export interface WorldObject {
 }
 
 export class WorldManager {
-  private world: WorldObject[]
+  private world: WorldObject[];
+  private selfMovingActors: Movable[];
   constructor(private player:Player) {
     this.world = [];
+    this.selfMovingActors = [];
   }
   addObject(object:WorldObject) {
     this.world.push(object);
+  }
+  addSelfMovingActor(actor:Movable) {
+    this.selfMovingActors.push(actor);
   }
   isEmpty() {
     return this.world.length == 0;
@@ -33,6 +39,9 @@ export class WorldManager {
   }
   getObjectsOfType(objectType: WorldObjectType) {
     return this.world.filter((obj) => obj.objectType == objectType);
+  }
+  getSelfMovingActors() {
+    return this.selfMovingActors;
   }
   fireHelipadCollisionEvent() {
     this.getObjectsOfType(WorldObjectType.HELIPAD).forEach((pad) => {
