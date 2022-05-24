@@ -130,3 +130,7 @@ test("is able to untrack collided objects", () => {
     expect(basicActor.isCollidedWith(target)).toBeTruthy();
     expect(basicActor.isCollidedWith(target2)).toBeFalsy();
 });
+
+test("has doUpdate method", () => {
+    expect(basicActor.doUpdate()).toBeFalsy();
+})

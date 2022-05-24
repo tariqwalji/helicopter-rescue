@@ -1,5 +1,6 @@
 import {WorldManager} from "../world";
 import { Movable } from "./base/movable";
+import {Basic} from "./base/basic";
 
 export class Rescuee extends Movable {
   private speed: number = 1;
@@ -11,7 +12,9 @@ export class Rescuee extends Movable {
   setSpeed(speedValue: number) {
     this.speed = speedValue;
   }
-  updatePosition(manager:WorldManager) {
+  doUpdate(manager?:WorldManager, ctx?: Basic): boolean {
+    if(!manager) return false;
+
     const player = manager.getPlayer();
     if (player.isLanded()) {
       if (player.getAttachedObject().x !== this.getAttachedObject().x) {
@@ -25,6 +28,7 @@ export class Rescuee extends Movable {
         this.hasBeenRescued = true;
       }
     }
+    return true;
   }
   isRescued(): boolean {
     return this.hasBeenRescued;

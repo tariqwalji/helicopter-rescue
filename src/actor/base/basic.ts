@@ -1,4 +1,4 @@
-import {WorldObject} from "../../world";
+import {WorldManager, WorldObject} from "../../world";
 
 export class Basic {
     private collidedObjects: WorldObject[] = [];
@@ -22,5 +22,8 @@ export class Basic {
     }
     isCollidedWith(obj: WorldObject) {
         return this.collidedObjects.includes(obj);
+    }
+    doUpdate(obj?: WorldManager, ctx?: Basic): boolean {
+        return false;
     }
 }

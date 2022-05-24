@@ -40,27 +40,27 @@ test("has speed", () => {
 });
 
 test("stays still if player hasn't landed", () => {
-  rescuee.updatePosition(worldManager);
+  rescuee.doUpdate(worldManager);
   expect(rescuee.getAttachedObject().x).toBe(100);
 });
 
 test("moves right towards player if player has landed", () => {
   worldManager.getPlayer().hasLanded(true);
-  rescuee.updatePosition(worldManager);
+  rescuee.doUpdate(worldManager);
   expect(rescuee.getAttachedObject().x).toBe(101);
 });
 
 test("moves left towards player if player has landed", () => {
   worldManager.getPlayer().getAttachedObject().x = 90;
   worldManager.getPlayer().hasLanded(true);
-  rescuee.updatePosition(worldManager);
+  rescuee.doUpdate(worldManager);
   expect(rescuee.getAttachedObject().x).toBe(99);
 });
 
 test("moves right towards player at faster speed if player has landed", () => {
   worldManager.getPlayer().hasLanded(true);
   rescuee.setSpeed(3);
-  rescuee.updatePosition(worldManager);
+  rescuee.doUpdate(worldManager);
   expect(rescuee.getAttachedObject().x).toBe(103);
 });
 
@@ -70,19 +70,22 @@ test("rescuee gets rescued if at helicopter coordinates", () => {
   expect(rescuee.isRescued()).toBeFalsy();
 
   rescuee.getAttachedObject().x = 92;
-  rescuee.updatePosition(worldManager);
+  rescuee.doUpdate(worldManager);
   expect(rescuee.getAttachedObject().x).toBe(91);
 
   expect(rescuee.isRescued()).toBeFalsy();
 
-  rescuee.updatePosition(worldManager);
+  rescuee.doUpdate(worldManager);
   expect(rescuee.getAttachedObject().x).toBe(90);
   expect(rescuee.isRescued()).toBeFalsy();
 
-  rescuee.updatePosition(worldManager);
+  rescuee.doUpdate(worldManager);
   expect(rescuee.isRescued()).toBeTruthy();  
 });
 
+test("doUpdate with no arguments returns false", () => {
+  expect(rescuee.doUpdate()).toBeFalsy();
+});
 
 
 

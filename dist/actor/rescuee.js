@@ -31,7 +31,9 @@ var Rescuee = /** @class */ (function (_super) {
     Rescuee.prototype.setSpeed = function (speedValue) {
         this.speed = speedValue;
     };
-    Rescuee.prototype.updatePosition = function (manager) {
+    Rescuee.prototype.doUpdate = function (manager, ctx) {
+        if (!manager)
+            return false;
         var player = manager.getPlayer();
         if (player.isLanded()) {
             if (player.getAttachedObject().x !== this.getAttachedObject().x) {
@@ -46,6 +48,7 @@ var Rescuee = /** @class */ (function (_super) {
                 this.hasBeenRescued = true;
             }
         }
+        return true;
     };
     Rescuee.prototype.isRescued = function () {
         return this.hasBeenRescued;
