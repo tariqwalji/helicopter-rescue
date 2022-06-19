@@ -20,8 +20,22 @@ var basic_1 = require("./base/basic");
 var Helipad = /** @class */ (function (_super) {
     __extends(Helipad, _super);
     function Helipad(worldObject) {
-        return _super.call(this, worldObject) || this;
+        var _this = _super.call(this, worldObject) || this;
+        _this.rescuees = [];
+        return _this;
     }
+    Helipad.prototype.assignRescuee = function (rescuee) {
+        this.rescuees.push(rescuee);
+    };
+    Helipad.prototype.isPlayerLanded = function () {
+        return typeof this.landedPlayer !== "undefined";
+    };
+    Helipad.prototype.firePlayerLandedEvent = function (player) {
+        this.landedPlayer = player;
+    };
+    Helipad.prototype.firePlayerUnlandedEvent = function (player) {
+        this.landedPlayer = undefined;
+    };
     return Helipad;
 }(basic_1.Basic));
 exports.Helipad = Helipad;
