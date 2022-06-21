@@ -1,18 +1,19 @@
-import {WorldManager, WorldObject, WorldObjectType} from "./world";
-import {Player} from "./actor/player";
-import {Rescuee} from "./actor/rescuee";
+import { WorldManager, WorldObject, WorldObjectType } from "./world";
+import { Player } from "./actor/player";
+import { Rescuee } from "./actor/rescuee";
+import { Helipad } from "./actor/helipad";
 
 let world: WorldManager;
 let player: Player;
 
 beforeEach(() => {
-  let playerObject: WorldObject
+  let playerObject: WorldObject;
   playerObject = {
-      objectType: WorldObjectType.PLAYER,
-      x: 0,
-      y: 0,
-      width: 10,
-      height: 10,
+    objectType: WorldObjectType.PLAYER,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
   };
 
   player = new Player(playerObject);
@@ -28,15 +29,15 @@ test("world has a player", () => {
 });
 
 test("populate empty world with rescuee", () => {
-  const rescueeObject: WorldObject = {
+  const rescueeObject: Rescuee = new Rescuee({
     objectType: WorldObjectType.RESCUEE,
     x: 0,
     y: 0,
     width: 10,
     height: 10,
-  };
-  world.addObject(rescueeObject);
-  expect(world.getObjects()).toContain(rescueeObject);
+  });
+  world.addActor(rescueeObject);
+  expect(world.getAllActors()).toContain(rescueeObject);
 });
 
 test("world object has coordinates and dimensions", () => {
@@ -54,38 +55,40 @@ test("world object has coordinates and dimensions", () => {
 });
 
 test("add helipad to world", () => {
-  const heliPad: WorldObject = {
+  const heliPad: Helipad = new Helipad({
     objectType: WorldObjectType.HELIPAD,
     x: 100,
     y: 100,
     width: 10,
     height: 10,
-  };
-  world.addObject(heliPad);
-  expect(world.getObjects()).toContain(heliPad);
+  });
+  world.addActor(heliPad);
+  expect(world.getAllActors()).toContain(heliPad);
 });
 
 test("can get all helipads", () => {
-  for(let i=0; i<10; i++) {
-    world.addObject({
-      objectType: WorldObjectType.HELIPAD,
-      x: 100 + (10 * i),
-      y: 100,
-      width: 10,
-      height: 10,
-    });
+  for (let i = 0; i < 10; i++) {
+    world.addActor(
+      new Helipad({
+        objectType: WorldObjectType.HELIPAD,
+        x: 100 + 10 * i,
+        y: 100,
+        width: 10,
+        height: 10,
+      })
+    );
   }
 
-  let helipads = world.getObjectsOfType(WorldObjectType.HELIPAD);
+  let helipads = world.getActorsOfType(WorldObjectType.HELIPAD);
 
   expect(helipads).toHaveLength(10);
   helipads.forEach((pad, idx) => {
-    expect(pad.x).toBe(100 + (10 * idx));
+    expect(pad.getAttachedObject().x).toBe(100 + 10 * idx);
   });
 });
 
 test("fire helipad collision event - mark player landed", () => {
-  world.addObject({
+  const pad: Helipad = new Helipad({
     objectType: WorldObjectType.HELIPAD,
     x: 100,
     y: 0,
@@ -93,16 +96,18 @@ test("fire helipad collision event - mark player landed", () => {
     height: 10,
   });
 
+  world.addActor(pad);
+
   world.fireHelipadCollisionEvent();
-  expect(player.isLanded()).toBeFalsy();
+  expect(pad.isPlayerLanded()).toBeFalsy();
 
   player.getAttachedObject().x = 100;
   world.fireHelipadCollisionEvent();
-  expect(player.isLanded()).toBeTruthy();
+  expect(pad.isPlayerLanded()).toBeTruthy();
 });
 
 test("fire helipad uncollided event - mark player unlanded", () => {
-  world.addObject({
+  const pad: Helipad = new Helipad({
     objectType: WorldObjectType.HELIPAD,
     x: 100,
     y: 0,
@@ -110,27 +115,16 @@ test("fire helipad uncollided event - mark player unlanded", () => {
     height: 10,
   });
 
+  world.addActor(pad);
+
   world.fireHelipadCollisionEvent();
-  expect(player.isLanded()).toBeFalsy();
+  expect(pad.isPlayerLanded()).toBeFalsy();
 
   player.getAttachedObject().x = 100;
   world.fireHelipadCollisionEvent();
-  expect(player.isLanded()).toBeTruthy();
+  expect(pad.isPlayerLanded()).toBeTruthy();
 
   player.getAttachedObject().x = 0;
   world.fireHelipadCollisionEvent();
-  expect(player.isLanded()).toBeFalsy();
-});
-
-test("can add self moving actor", () => {
-  const r:Rescuee = new Rescuee({
-    objectType: WorldObjectType.RESCUEE,
-    x: 100,
-    y: 0,
-    width: 10,
-    height: 10
-  });
-
-  world.addSelfMovingActor(r);
-  expect(world.getSelfMovingActors()).toContain(r);
+  expect(pad.isPlayerLanded()).toBeFalsy();
 });

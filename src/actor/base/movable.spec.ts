@@ -1,4 +1,5 @@
 import { WorldObject, WorldObjectType } from "../../world";
+import { Helipad } from "../helipad";
 import { Movable } from "./movable";
 
 let movableObject: WorldObject;
@@ -41,14 +42,13 @@ test("move movableActor up", () => {
 });
 
 test("movableActor has collided", () => {
-  const target: WorldObject = {
+  const target: Helipad = new Helipad({
     objectType: WorldObjectType.HELIPAD,
     x: 100,
     y: 100,
     width: 10,
-    height: 10
-  }
+    height: 10,
+  });
+
   expect(movableActor.hasCollidedWith(target)).toBeTruthy();
-})
-
-
+});

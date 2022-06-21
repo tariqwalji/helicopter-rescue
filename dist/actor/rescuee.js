@@ -15,14 +15,20 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Rescuee = void 0;
+exports.Rescuee = exports.MovementState = void 0;
 var movable_1 = require("./base/movable");
+var MovementState;
+(function (MovementState) {
+    MovementState[MovementState["ROAMING"] = 0] = "ROAMING";
+    MovementState[MovementState["BOARDING"] = 1] = "BOARDING";
+})(MovementState = exports.MovementState || (exports.MovementState = {}));
 var Rescuee = /** @class */ (function (_super) {
     __extends(Rescuee, _super);
     function Rescuee() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.speed = 1;
         _this.hasBeenRescued = false;
+        _this.movementState = MovementState.ROAMING;
         return _this;
     }
     Rescuee.prototype.getSpeed = function () {
@@ -34,9 +40,11 @@ var Rescuee = /** @class */ (function (_super) {
     Rescuee.prototype.doUpdate = function (manager, ctx) {
         if (!manager)
             return false;
+        if (this.hasBeenRescued)
+            return false;
         var player = manager.getPlayer();
-        if (player.isLanded()) {
-            if (player.getAttachedObject().x !== this.getAttachedObject().x) {
+        if (this.movementState === MovementState.BOARDING) {
+            if (!player.hasCollidedWith(this)) {
                 if (player.getAttachedObject().x < this.getAttachedObject().x) {
                     this.moveLeft(this.speed);
                 }
@@ -52,6 +60,21 @@ var Rescuee = /** @class */ (function (_super) {
     };
     Rescuee.prototype.isRescued = function () {
         return this.hasBeenRescued;
+    };
+    Rescuee.prototype.assignToHelipad = function (pad) {
+        this.helipad = pad;
+    };
+    Rescuee.prototype.getAssignedPad = function () {
+        return this.helipad;
+    };
+    Rescuee.prototype.getMovementState = function () {
+        return this.movementState;
+    };
+    Rescuee.prototype.handlePlayerLandedEvent = function (player) {
+        this.movementState = MovementState.BOARDING;
+    };
+    Rescuee.prototype.handlePlayerTakeoffEvent = function (player) {
+        this.movementState = MovementState.ROAMING;
     };
     return Rescuee;
 }(movable_1.Movable));

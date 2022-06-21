@@ -1,29 +1,37 @@
-import {WorldManager, WorldObject} from "../../world";
+import { WorldManager, WorldObject } from "../../world";
 
 export class Basic {
-    private collidedObjects: WorldObject[] = [];
-    constructor(protected attachedObject: WorldObject) {}
-    getAttachedObject(): WorldObject {
-        return this.attachedObject;
+  private collidedActors: Basic[] = [];
+  constructor(protected attachedObject: WorldObject) {}
+  getAttachedObject(): WorldObject {
+    return this.attachedObject;
+  }
+  hasCollidedWith(target: Basic) {
+    return (
+      this.attachedObject.x <
+        target.getAttachedObject().x + target.getAttachedObject().width &&
+      this.attachedObject.x + this.attachedObject.width >
+        target.getAttachedObject().x &&
+      this.attachedObject.y <
+        target.getAttachedObject().y + target.getAttachedObject().height &&
+      this.attachedObject.y + this.attachedObject.width >
+        target.getAttachedObject().y
+    );
+  }
+  addCollidedObject(actor: Basic) {
+    if (!this.collidedActors.includes(actor)) {
+      this.collidedActors.push(actor);
     }
-    hasCollidedWith(target: WorldObject) {
-        return (this.attachedObject.x < target.x + target.width) &&
-            (this.attachedObject.x + this.attachedObject.width > target.x) &&
-            (this.attachedObject.y < (target.y + target.height) &&
-                (this.attachedObject.y + this.attachedObject.width > target.y))
-    }
-    addCollidedObject(obj: WorldObject) {
-        if(!this.collidedObjects.includes(obj)) {
-            this.collidedObjects.push(obj);
-        }
-    }
-    removeCollidedObject(obj: WorldObject) {
-        this.collidedObjects = this.collidedObjects.filter(collidedObj => collidedObj != obj);
-    }
-    isCollidedWith(obj: WorldObject) {
-        return this.collidedObjects.includes(obj);
-    }
-    doUpdate(obj?: WorldManager, ctx?: Basic): boolean {
-        return false;
-    }
+  }
+  removeCollidedObject(actor: Basic) {
+    this.collidedActors = this.collidedActors.filter(
+      (collidedActor) => collidedActor != actor
+    );
+  }
+  isCollidedWith(actor: Basic) {
+    return this.collidedActors.includes(actor);
+  }
+  doUpdate(obj?: WorldManager, ctx?: Basic): boolean {
+    return false;
+  }
 }

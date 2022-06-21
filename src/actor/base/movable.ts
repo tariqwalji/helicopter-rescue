@@ -1,5 +1,5 @@
 import { WorldObject } from "../../world";
-import {Basic} from "./basic";
+import { Basic } from "./basic";
 
 export class Movable extends Basic {
   constructor(attachedObject: WorldObject) {

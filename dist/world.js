@@ -11,13 +11,9 @@ var WorldManager = /** @class */ (function () {
     function WorldManager(player) {
         this.player = player;
         this.world = [];
-        this.selfMovingActors = [];
     }
-    WorldManager.prototype.addObject = function (object) {
-        this.world.push(object);
-    };
-    WorldManager.prototype.addSelfMovingActor = function (actor) {
-        this.selfMovingActors.push(actor);
+    WorldManager.prototype.addActor = function (actor) {
+        this.world.push(actor);
     };
     WorldManager.prototype.isEmpty = function () {
         return this.world.length == 0;
@@ -25,27 +21,25 @@ var WorldManager = /** @class */ (function () {
     WorldManager.prototype.getPlayer = function () {
         return this.player;
     };
-    WorldManager.prototype.getObjects = function () {
+    WorldManager.prototype.getAllActors = function () {
         return this.world;
     };
-    WorldManager.prototype.getObjectsOfType = function (objectType) {
-        return this.world.filter(function (obj) { return obj.objectType == objectType; });
-    };
-    WorldManager.prototype.getSelfMovingActors = function () {
-        return this.selfMovingActors;
+    WorldManager.prototype.getActorsOfType = function (objectType) {
+        return this.world.filter(function (obj) { return obj.getAttachedObject().objectType == objectType; });
     };
     WorldManager.prototype.fireHelipadCollisionEvent = function () {
         var _this = this;
-        this.getObjectsOfType(WorldObjectType.HELIPAD).forEach(function (pad) {
+        this.getActorsOfType(WorldObjectType.HELIPAD).forEach(function (obj) {
+            var pad = obj;
             if (_this.player.isCollidedWith(pad)) {
                 if (!_this.player.hasCollidedWith(pad)) {
-                    _this.player.handlePlayerOffHelipad(pad);
+                    pad.handlePlayerTakeoffEvent(_this.player);
                     _this.player.removeCollidedObject(pad);
                 }
             }
             else {
                 if (_this.player.hasCollidedWith(pad)) {
-                    _this.player.handlePlayerOnHelipad(pad);
+                    pad.handlePlayerLandedEvent(_this.player);
                     _this.player.addCollidedObject(pad);
                 }
             }

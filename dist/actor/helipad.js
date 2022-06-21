@@ -24,17 +24,25 @@ var Helipad = /** @class */ (function (_super) {
         _this.rescuees = [];
         return _this;
     }
+    Helipad.prototype.getRescuees = function () {
+        return this.rescuees;
+    };
     Helipad.prototype.assignRescuee = function (rescuee) {
         this.rescuees.push(rescuee);
+        rescuee.assignToHelipad(this);
     };
     Helipad.prototype.isPlayerLanded = function () {
         return typeof this.landedPlayer !== "undefined";
     };
-    Helipad.prototype.firePlayerLandedEvent = function (player) {
+    Helipad.prototype.handlePlayerLandedEvent = function (player) {
         this.landedPlayer = player;
+        this.rescuees.forEach(function (rescuee) { return rescuee.handlePlayerLandedEvent(player); });
     };
-    Helipad.prototype.firePlayerUnlandedEvent = function (player) {
+    Helipad.prototype.handlePlayerTakeoffEvent = function (player) {
         this.landedPlayer = undefined;
+        this.rescuees.forEach(function (rescuee) {
+            return rescuee.handlePlayerTakeoffEvent(player);
+        });
     };
     return Helipad;
 }(basic_1.Basic));

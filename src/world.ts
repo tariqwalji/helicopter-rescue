@@ -1,10 +1,11 @@
-import {Player} from "./actor/player";
-import {Movable} from "./actor/base/movable";
+import { Player } from "./actor/player";
+import { Basic } from "./actor/base/basic";
+import { Helipad } from "./actor/helipad";
 
 export enum WorldObjectType {
   PLAYER,
   RESCUEE,
-  HELIPAD
+  HELIPAD,
 }
 
 export interface WorldObject {
@@ -16,17 +17,12 @@ export interface WorldObject {
 }
 
 export class WorldManager {
-  private world: WorldObject[];
-  private selfMovingActors: Movable[];
-  constructor(private player:Player) {
+  private world: Basic[];
+  constructor(private player: Player) {
     this.world = [];
-    this.selfMovingActors = [];
   }
-  addObject(object:WorldObject) {
-    this.world.push(object);
-  }
-  addSelfMovingActor(actor:Movable) {
-    this.selfMovingActors.push(actor);
+  addActor(actor: Basic) {
+    this.world.push(actor);
   }
   isEmpty() {
     return this.world.length == 0;
@@ -34,26 +30,25 @@ export class WorldManager {
   getPlayer() {
     return this.player;
   }
-  getObjects() {
+  getAllActors() {
     return this.world;
   }
-  getObjectsOfType(objectType: WorldObjectType) {
-    return this.world.filter((obj) => obj.objectType == objectType);
-  }
-  getSelfMovingActors() {
-    return this.selfMovingActors;
+  getActorsOfType(objectType: WorldObjectType) {
+    return this.world.filter(
+      (obj) => obj.getAttachedObject().objectType == objectType
+    );
   }
   fireHelipadCollisionEvent() {
-    this.getObjectsOfType(WorldObjectType.HELIPAD).forEach((pad) => {
-      if(this.player.isCollidedWith(pad)) {
+    this.getActorsOfType(WorldObjectType.HELIPAD).forEach((obj) => {
+      const pad = <Helipad>obj;
+      if (this.player.isCollidedWith(pad)) {
         if (!this.player.hasCollidedWith(pad)) {
-          this.player.handlePlayerOffHelipad(pad);
+          pad.handlePlayerTakeoffEvent(this.player);
           this.player.removeCollidedObject(pad);
         }
-      }
-      else {
+      } else {
         if (this.player.hasCollidedWith(pad)) {
-          this.player.handlePlayerOnHelipad(pad);
+          pad.handlePlayerLandedEvent(this.player);
           this.player.addCollidedObject(pad);
         }
       }

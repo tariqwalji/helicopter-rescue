@@ -20,22 +20,8 @@ var movable_1 = require("./base/movable");
 var Player = /** @class */ (function (_super) {
     __extends(Player, _super);
     function Player() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.landed = false;
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    Player.prototype.hasLanded = function (landingStatus) {
-        this.landed = landingStatus;
-    };
-    Player.prototype.isLanded = function () {
-        return this.landed;
-    };
-    Player.prototype.handlePlayerOnHelipad = function (helipad) {
-        this.hasLanded(true);
-    };
-    Player.prototype.handlePlayerOffHelipad = function (helipad) {
-        this.hasLanded(false);
-    };
     return Player;
 }(movable_1.Movable));
 exports.Player = Player;
