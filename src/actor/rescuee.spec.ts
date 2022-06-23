@@ -129,12 +129,14 @@ test("rescuee can be transferred to player", () => {
   });
   pad.assignRescuee(rescuee);
 
+  expect(pad.getRescuees().length).toBe(1);
   const player:Player = worldManager.getPlayer();
   player.setRescueeCapacity(2);
   expect(player.getCurrentRescueeCount()).toBe(0);
   rescuee.transferToPlayer(player);
   expect(player.getCurrentRescueeCount()).toBe(1);
   expect(rescuee.getAssignedPad()).toBeFalsy();
+  expect(pad.getRescuees().length).toBe(0);
 });
 
 test("rescuee cannot be transferred to player twice", () => {
