@@ -20,8 +20,16 @@ var movable_1 = require("./base/movable");
 var Player = /** @class */ (function (_super) {
     __extends(Player, _super);
     function Player() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.rescueeCapacity = 0;
+        return _this;
     }
+    Player.prototype.setRescueeCapacity = function (capacity) {
+        this.rescueeCapacity = capacity;
+    };
+    Player.prototype.getRescueeCapacity = function () {
+        return this.rescueeCapacity;
+    };
     return Player;
 }(movable_1.Movable));
 exports.Player = Player;
