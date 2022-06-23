@@ -40,7 +40,7 @@ test("can be assigned to a helipad", () => {
     width: 10,
     height: 10,
   });
-  expect(rescuee.getAssignedPad()).toBeUndefined();
+  expect(rescuee.getAssignedPad()).toBeFalsy();
   rescuee.assignToHelipad(pad);
   expect(rescuee.getAssignedPad()).toBe(pad);
 });
@@ -117,4 +117,40 @@ test("handlePlayerTakeoffEvent: change movement state to ROAMING", () => {
 test("rescuee movement state is BOARDING if player is landed", () => {
   rescuee.handlePlayerLandedEvent(worldManager.getPlayer());
   expect(rescuee.getMovementState()).toBe(MovementState.BOARDING);
+});
+
+test("rescuee can be transferred to player", () => {
+  const pad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+  pad.assignRescuee(rescuee);
+
+  const player:Player = worldManager.getPlayer();
+  player.setRescueeCapacity(2);
+  expect(player.getCurrentRescueeCount()).toBe(0);
+  rescuee.transferToPlayer(player);
+  expect(player.getCurrentRescueeCount()).toBe(1);
+  expect(rescuee.getAssignedPad()).toBeFalsy();
+});
+
+test("rescuee cannot be transferred to player twice", () => {
+  const pad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+  pad.assignRescuee(rescuee);
+
+  const player:Player = worldManager.getPlayer();
+  player.setRescueeCapacity(2);
+  expect(player.getCurrentRescueeCount()).toBe(0);
+  rescuee.transferToPlayer(player);
+  rescuee.transferToPlayer(player);
+  expect(player.getCurrentRescueeCount()).toBe(1);
 });

@@ -65,7 +65,7 @@ var Rescuee = /** @class */ (function (_super) {
         this.helipad = pad;
     };
     Rescuee.prototype.getAssignedPad = function () {
-        return this.helipad;
+        return (this.helipad) ? this.helipad : false;
     };
     Rescuee.prototype.getMovementState = function () {
         return this.movementState;
@@ -75,6 +75,13 @@ var Rescuee = /** @class */ (function (_super) {
     };
     Rescuee.prototype.handlePlayerTakeoffEvent = function (player) {
         this.movementState = MovementState.ROAMING;
+    };
+    Rescuee.prototype.transferToPlayer = function (player) {
+        var _a;
+        if (this.getAssignedPad() && player.pickUpRescuee(this)) {
+            (_a = this.helipad) === null || _a === void 0 ? void 0 : _a.removeRescuee(this);
+            this.helipad = undefined;
+        }
     };
     return Rescuee;
 }(movable_1.Movable));

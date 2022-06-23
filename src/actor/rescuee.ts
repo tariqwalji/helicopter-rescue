@@ -46,7 +46,7 @@ export class Rescuee extends Movable {
     this.helipad = pad;
   }
   getAssignedPad() {
-    return this.helipad;
+    return (this.helipad)?this.helipad:false;
   }
   getMovementState() {
     return this.movementState;
@@ -56,5 +56,11 @@ export class Rescuee extends Movable {
   }
   handlePlayerTakeoffEvent(player: Player) {
     this.movementState = MovementState.ROAMING;
+  }
+  transferToPlayer(player:Player) {
+    if(this.getAssignedPad() && player.pickUpRescuee(this)) {
+      this.helipad?.removeRescuee(this);
+      this.helipad = undefined;
+    }
   }
 }
