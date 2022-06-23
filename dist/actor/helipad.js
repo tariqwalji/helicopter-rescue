@@ -15,17 +15,30 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Helipad = void 0;
+exports.Helipad = exports.LandingType = void 0;
 var basic_1 = require("./base/basic");
+var LandingType;
+(function (LandingType) {
+    LandingType[LandingType["PICK_UP"] = 0] = "PICK_UP";
+    LandingType[LandingType["DROP_OFF"] = 1] = "DROP_OFF";
+})(LandingType = exports.LandingType || (exports.LandingType = {}));
+;
 var Helipad = /** @class */ (function (_super) {
     __extends(Helipad, _super);
     function Helipad(worldObject) {
         var _this = _super.call(this, worldObject) || this;
+        _this.landingType = LandingType.PICK_UP;
         _this.rescuees = [];
         return _this;
     }
     Helipad.prototype.getRescuees = function () {
         return this.rescuees;
+    };
+    Helipad.prototype.getRescuee = function (rescuee) {
+        return this.rescuees.find(function (r) { return r === rescuee; });
+    };
+    Helipad.prototype.removeRescuee = function (rescuee) {
+        this.rescuees = this.rescuees.filter(function (r) { return r !== rescuee; });
     };
     Helipad.prototype.assignRescuee = function (rescuee) {
         this.rescuees.push(rescuee);
@@ -43,6 +56,15 @@ var Helipad = /** @class */ (function (_super) {
         this.rescuees.forEach(function (rescuee) {
             return rescuee.handlePlayerTakeoffEvent(player);
         });
+    };
+    Helipad.prototype.isPickupPoint = function () {
+        return this.landingType === LandingType.PICK_UP;
+    };
+    Helipad.prototype.isDropOffPoint = function () {
+        return this.landingType === LandingType.DROP_OFF;
+    };
+    Helipad.prototype.switchToDropOffPoint = function () {
+        this.landingType = LandingType.DROP_OFF;
     };
     return Helipad;
 }(basic_1.Basic));

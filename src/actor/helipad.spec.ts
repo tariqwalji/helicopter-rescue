@@ -17,49 +17,93 @@ test("helipad can be created", () => {
 });
 
 test("add rescuee to helipad", () => {
-  let rescueeObj: WorldObject = {
+  let rescuee: Rescuee = new Rescuee({
     objectType: WorldObjectType.RESCUEE,
     x: 100,
     y: 100,
     width: 10,
     height: 10,
-  };
+  });
 
-  let rescuee: Rescuee = new Rescuee(rescueeObj);
-
-  const padObject: WorldObject = {
+  const pad: Helipad = new Helipad({
     objectType: WorldObjectType.HELIPAD,
     x: 0,
     y: 0,
     width: 10,
     height: 10,
-  };
-  const pad: Helipad = new Helipad(padObject);
+  });
   pad.assignRescuee(rescuee);
 
   expect(pad.getRescuees()).toContain(rescuee);
   expect(rescuee.getAssignedPad()).toBe(pad);
 });
 
-test("update pad that helicopter has landed", () => {
-  let rescueeObj: WorldObject = {
+test("get rescuee from helipad", () => {
+  let rescuee: Rescuee = new Rescuee({
     objectType: WorldObjectType.RESCUEE,
     x: 100,
     y: 100,
     width: 10,
     height: 10,
-  };
+  });
 
-  let rescuee: Rescuee = new Rescuee(rescueeObj);
-
-  const padObject: WorldObject = {
+  const pad: Helipad = new Helipad({
     objectType: WorldObjectType.HELIPAD,
     x: 0,
     y: 0,
     width: 10,
     height: 10,
-  };
-  const pad: Helipad = new Helipad(padObject);
+  });
+  pad.assignRescuee(rescuee);
+
+  expect(pad.getRescuees()).toContain(rescuee);
+  expect(rescuee.getAssignedPad()).toBe(pad);
+
+  expect(pad.getRescuee(rescuee)).toBe(rescuee);
+});
+
+test("remove rescuee from helipad", () => {
+  let rescuee: Rescuee = new Rescuee({
+    objectType: WorldObjectType.RESCUEE,
+    x: 100,
+    y: 100,
+    width: 10,
+    height: 10,
+  });
+
+  const pad: Helipad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+  pad.assignRescuee(rescuee);
+
+  expect(pad.getRescuees()).toContain(rescuee);
+  expect(rescuee.getAssignedPad()).toBe(pad);
+
+  expect(pad.getRescuee(rescuee)).toBe(rescuee);
+  pad.removeRescuee(rescuee);
+  expect(pad.getRescuee(rescuee)).toBeFalsy();
+});
+
+test("update pad that helicopter has landed", () => {
+  let rescuee: Rescuee = new Rescuee({
+    objectType: WorldObjectType.RESCUEE,
+    x: 100,
+    y: 100,
+    width: 10,
+    height: 10,
+  });
+
+  const pad: Helipad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
   pad.assignRescuee(rescuee);
 
   const player: Player = new Player({
@@ -76,24 +120,21 @@ test("update pad that helicopter has landed", () => {
 });
 
 test("update pad that helicopter has taken off", () => {
-  let rescueeObj: WorldObject = {
+  let rescuee: Rescuee = new Rescuee({
     objectType: WorldObjectType.RESCUEE,
     x: 100,
     y: 100,
     width: 10,
     height: 10,
-  };
+  });
 
-  let rescuee: Rescuee = new Rescuee(rescueeObj);
-
-  const padObject: WorldObject = {
+  const pad: Helipad = new Helipad({
     objectType: WorldObjectType.HELIPAD,
     x: 0,
     y: 0,
     width: 10,
     height: 10,
-  };
-  const pad: Helipad = new Helipad(padObject);
+  });
   pad.assignRescuee(rescuee);
 
   const player: Player = new Player({
@@ -113,24 +154,21 @@ test("update pad that helicopter has taken off", () => {
 });
 
 test("inform rescuees helicopter player has landed", () => {
-  let rescueeObj: WorldObject = {
+  let rescuee: Rescuee = new Rescuee({
     objectType: WorldObjectType.RESCUEE,
     x: 100,
     y: 100,
     width: 10,
     height: 10,
-  };
+  });
 
-  let rescuee: Rescuee = new Rescuee(rescueeObj);
-
-  const padObject: WorldObject = {
+  const pad: Helipad = new Helipad({
     objectType: WorldObjectType.HELIPAD,
     x: 0,
     y: 0,
     width: 10,
     height: 10,
-  };
-  const pad: Helipad = new Helipad(padObject);
+  });
   pad.assignRescuee(rescuee);
 
   const player: Player = new Player({
@@ -147,24 +185,21 @@ test("inform rescuees helicopter player has landed", () => {
 });
 
 test("inform rescuees helicopter has taken off", () => {
-  let rescueeObj: WorldObject = {
+  let rescuee: Rescuee = new Rescuee({
     objectType: WorldObjectType.RESCUEE,
     x: 100,
     y: 100,
     width: 10,
     height: 10,
-  };
+  });
 
-  let rescuee: Rescuee = new Rescuee(rescueeObj);
-
-  const padObject: WorldObject = {
+  const pad: Helipad = new Helipad({
     objectType: WorldObjectType.HELIPAD,
     x: 0,
     y: 0,
     width: 10,
     height: 10,
-  };
-  const pad: Helipad = new Helipad(padObject);
+  });
   pad.assignRescuee(rescuee);
 
   const player: Player = new Player({
@@ -182,4 +217,30 @@ test("inform rescuees helicopter has taken off", () => {
 
   pad.handlePlayerTakeoffEvent(player);
   expect(rescuee.getMovementState()).toBe(MovementState.ROAMING);
+});
+
+test("helipad defaults to being pick-up point", () => {
+  const pad: Helipad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+
+  expect(pad.isPickupPoint()).toBeTruthy();
+});
+
+test("set helipad status to drop-off point", () => {
+  const pad: Helipad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+
+  expect(pad.isPickupPoint()).toBeTruthy();
+  pad.switchToDropOffPoint();
+  expect(pad.isDropOffPoint()).toBeTruthy();
 });
