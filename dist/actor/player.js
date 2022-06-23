@@ -22,6 +22,7 @@ var Player = /** @class */ (function (_super) {
     function Player() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.rescueeCapacity = 0;
+        _this.rescuees = [];
         return _this;
     }
     Player.prototype.setRescueeCapacity = function (capacity) {
@@ -29,6 +30,16 @@ var Player = /** @class */ (function (_super) {
     };
     Player.prototype.getRescueeCapacity = function () {
         return this.rescueeCapacity;
+    };
+    Player.prototype.getCurrentRescueeCount = function () {
+        return this.rescuees.length;
+    };
+    Player.prototype.pickUpRescuee = function (rescuee) {
+        if (this.getCurrentRescueeCount() < this.getRescueeCapacity()) {
+            this.rescuees.push(rescuee);
+            return true;
+        }
+        return false;
     };
     return Player;
 }(movable_1.Movable));
