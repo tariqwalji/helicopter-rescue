@@ -63,4 +63,11 @@ export class Rescuee extends Movable {
       this.helipad = undefined;
     }
   }
+  transferToHelipad(pad:Helipad) {
+    const originalPad = this.helipad;
+    pad.assignRescuee(this);
+    if (originalPad) {
+      originalPad.removeRescuee(this);
+    }
+  }
 }

@@ -156,3 +156,29 @@ test("rescuee cannot be transferred to player twice", () => {
   rescuee.transferToPlayer(player);
   expect(player.getCurrentRescueeCount()).toBe(1);
 });
+
+test("rescuee can be transferred to helipad", () => {
+  const sourcePad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+  sourcePad.assignRescuee(rescuee);
+  expect(sourcePad.getRescuee(rescuee)).toBe(rescuee);
+  expect(rescuee.getAssignedPad()).toBe(sourcePad);
+
+  const destinationPad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+
+  rescuee.transferToHelipad(destinationPad);
+  expect(destinationPad.getRescuee(rescuee)).toBe(rescuee);
+  expect(sourcePad.getRescuee(rescuee)).toBeFalsy();
+  expect(rescuee.getAssignedPad()).toBe(destinationPad);
+});

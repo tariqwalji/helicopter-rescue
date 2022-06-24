@@ -83,6 +83,13 @@ var Rescuee = /** @class */ (function (_super) {
             this.helipad = undefined;
         }
     };
+    Rescuee.prototype.transferToHelipad = function (pad) {
+        var originalPad = this.helipad;
+        pad.assignRescuee(this);
+        if (originalPad) {
+            originalPad.removeRescuee(this);
+        }
+    };
     return Rescuee;
 }(movable_1.Movable));
 exports.Rescuee = Rescuee;
