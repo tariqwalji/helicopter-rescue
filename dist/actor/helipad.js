@@ -22,13 +22,17 @@ var LandingType;
     LandingType[LandingType["PICK_UP"] = 0] = "PICK_UP";
     LandingType[LandingType["DROP_OFF"] = 1] = "DROP_OFF";
 })(LandingType = exports.LandingType || (exports.LandingType = {}));
-;
+var DEFAULT_BOUNDARY_WIDTH = 10;
 var Helipad = /** @class */ (function (_super) {
     __extends(Helipad, _super);
     function Helipad(worldObject) {
         var _this = _super.call(this, worldObject) || this;
         _this.landingType = LandingType.PICK_UP;
         _this.rescuees = [];
+        _this.boundaryEdge = {
+            left: worldObject.x - DEFAULT_BOUNDARY_WIDTH / 2,
+            right: worldObject.x + DEFAULT_BOUNDARY_WIDTH / 2,
+        };
         return _this;
     }
     Helipad.prototype.getRescuees = function () {
@@ -65,6 +69,12 @@ var Helipad = /** @class */ (function (_super) {
     };
     Helipad.prototype.switchToDropOffPoint = function () {
         this.landingType = LandingType.DROP_OFF;
+    };
+    Helipad.prototype.getBoundaryEdge = function () {
+        return this.boundaryEdge;
+    };
+    Helipad.prototype.setBoundaryEdge = function (boundaryEdge) {
+        this.boundaryEdge = boundaryEdge;
     };
     return Helipad;
 }(basic_1.Basic));

@@ -244,3 +244,28 @@ test("set helipad status to drop-off point", () => {
   pad.switchToDropOffPoint();
   expect(pad.isDropOffPoint()).toBeTruthy();
 });
+
+test("helipad has default boundary edge of +/- 5 from x", () => {
+  const pad: Helipad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 50,
+    y: 50,
+    width: 10,
+    height: 10,
+  });
+
+  expect(pad.getBoundaryEdge()).toMatchObject({ left: 45, right: 55 });
+});
+
+test("helipad can set left/right boundary edge", () => {
+  const pad: Helipad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 50,
+    y: 50,
+    width: 10,
+    height: 10,
+  });
+
+  pad.setBoundaryEdge({ left: 25, right: 75 });
+  expect(pad.getBoundaryEdge()).toMatchObject({ left: 25, right: 75 });
+});
