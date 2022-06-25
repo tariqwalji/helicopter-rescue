@@ -65,3 +65,15 @@ test("rescuee cannot be added if maximum capacity", () => {
   expect(player.pickUpRescuee(rescueeTheSecond)).toBeFalsy();
   expect(player.getCurrentRescueeCount()).toBe(1);
 });
+
+test("player can drop off all rescuees to target helipad (instant)", () => {
+
+});
+
+test("player can drop off all rescuees at set intervals", () => {
+
+});
+
+test("cancel player drop off if player leaves landing area",  () => {
+
+});

@@ -182,3 +182,28 @@ test("rescuee can be transferred to helipad", () => {
   expect(sourcePad.getRescuee(rescuee)).toBeFalsy();
   expect(rescuee.getAssignedPad()).toBe(destinationPad);
 });
+
+test("rescuee has roaming direction, defaults to ROAM_LEFT", () => {
+
+});
+
+test("rescuee can have roaming direction set to ROAM_LEFT", () => {
+
+});
+
+test("rescuee can have roaming direciton set to ROAM_RIGHT", () => {
+
+});
+
+test("rescuee moves in roaming direction when in ROAMING state", () => {
+
+});
+
+test("rescuee switches from ROAM_LEFT to ROAM_RIGHT when hitting helipad boundary", () => {
+
+});
+
+test("rescuee switches from ROAM_RIGHT to ROAM_LEFT when hitting helipad boundary", () => {
+
+});
+
