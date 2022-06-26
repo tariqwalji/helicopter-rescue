@@ -41,6 +41,12 @@ var Player = /** @class */ (function (_super) {
         }
         return false;
     };
+    Player.prototype.dropOffAllRescuees = function (pad) {
+        this.rescuees.forEach(function (r) {
+            r.transferToHelipad(pad);
+        });
+        this.rescuees = [];
+    };
     return Player;
 }(movable_1.Movable));
 exports.Player = Player;

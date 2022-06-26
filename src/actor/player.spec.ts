@@ -1,4 +1,5 @@
 import { WorldObject, WorldObjectType } from "../world";
+import { Helipad } from "./helipad";
 import { Player } from "./player";
 import { Rescuee } from "./rescuee";
 
@@ -67,13 +68,28 @@ test("rescuee cannot be added if maximum capacity", () => {
 });
 
 test("player can drop off all rescuees to target helipad (instant)", () => {
+  player.setRescueeCapacity(4);
+  for(let i=0; i<4; i++) {
+    player.pickUpRescuee(new Rescuee({
+      objectType: WorldObjectType.RESCUEE,
+      x: 100 + (10*i),
+      y: 100,
+      width: 10,
+      height: 10,
+    }));    
+  }
+  expect(player.getCurrentRescueeCount()).toBe(4);
 
-});
+  const pad:Helipad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 100,
+    y: 150,
+    width: 10,
+    height: 10,
+  });
+  expect(pad.getRescuees().length).toBe(0);
 
-test("player can drop off all rescuees at set intervals", () => {
-
-});
-
-test("cancel player drop off if player leaves landing area",  () => {
-
+  player.dropOffAllRescuees(pad);
+  expect(pad.getRescuees().length).toBe(4);
+  expect(player.getCurrentRescueeCount()).toBe(0);
 });

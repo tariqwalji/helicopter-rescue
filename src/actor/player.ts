@@ -1,4 +1,5 @@
 import { Movable } from "./base/movable";
+import { Helipad } from "./helipad";
 import { Rescuee } from "./rescuee";
 
 export class Player extends Movable {
@@ -19,5 +20,11 @@ export class Player extends Movable {
       return true;
     }
     return false;
+  }
+  dropOffAllRescuees(pad:Helipad) {
+    this.rescuees.forEach((r) => {
+      r.transferToHelipad(pad);
+    });
+    this.rescuees = [];
   }
 }
