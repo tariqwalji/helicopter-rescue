@@ -1,7 +1,7 @@
 import { WorldManager, WorldObject, WorldObjectType } from "../world";
 import { Helipad } from "./helipad";
 import { Player } from "./player";
-import { Rescuee, MovementState } from "./rescuee";
+import { Rescuee, MovementState, RoamingDirection } from "./rescuee";
 
 let rescuee: Rescuee;
 let worldManager: WorldManager;
@@ -43,11 +43,6 @@ test("can be assigned to a helipad", () => {
   expect(rescuee.getAssignedPad()).toBeFalsy();
   rescuee.assignToHelipad(pad);
   expect(rescuee.getAssignedPad()).toBe(pad);
-});
-
-test("stays still if player hasn't landed", () => {
-  rescuee.doUpdate(worldManager);
-  expect(rescuee.getAttachedObject().x).toBe(100);
 });
 
 test("moves right towards player if player has landed", () => {
@@ -183,27 +178,113 @@ test("rescuee can be transferred to helipad", () => {
   expect(rescuee.getAssignedPad()).toBe(destinationPad);
 });
 
-test("rescuee has roaming direction, defaults to ROAM_LEFT", () => {
+test("rescuee has roaming direction, defaults to RoamingDirection.LEFT", () => {
+  expect(rescuee.getRoamingDirection()).toBe(RoamingDirection.LEFT);
+});
+
+test("rescuee can have roaming direction set to RoamingDirection.RIGHT", () => {
+  rescuee.setRoamingDirection(RoamingDirection.RIGHT);
+  expect(rescuee.getRoamingDirection()).toBe(RoamingDirection.RIGHT);  
+});
+
+test("rescuee can have roaming direciton set to RoamingDirection.RIGHT", () => {
+  rescuee.setRoamingDirection(RoamingDirection.RIGHT);
+  expect(rescuee.getRoamingDirection()).toBe(RoamingDirection.RIGHT);  
+  rescuee.setRoamingDirection(RoamingDirection.LEFT);
+  expect(rescuee.getRoamingDirection()).toBe(RoamingDirection.LEFT);
 
 });
 
-test("rescuee can have roaming direction set to ROAM_LEFT", () => {
+test("rescuee moves in roaming direction when in ROAMING state (LEFT)", () => {
+  const pad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+  pad.assignRescuee(rescuee);
+  pad.setBoundaryEdge({ left: 99, right: 101 });
 
+
+  expect(rescuee.getMovementState()).toBe(MovementState.ROAMING);
+  rescuee.setRoamingDirection(RoamingDirection.LEFT);
+  expect(rescuee.getAttachedObject().x).toBe(100);
+  rescuee.doUpdate(worldManager);
+  expect(rescuee.getAttachedObject().x).toBe(99);
 });
 
-test("rescuee can have roaming direciton set to ROAM_RIGHT", () => {
+test("rescuee moves in roaming direction when in ROAMING state (RIGHT)", () => {
+  const pad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+  pad.assignRescuee(rescuee);
+  pad.setBoundaryEdge({ left: 99, right: 101 });
 
+  expect(rescuee.getMovementState()).toBe(MovementState.ROAMING);
+  rescuee.setRoamingDirection(RoamingDirection.RIGHT);
+  expect(rescuee.getAttachedObject().x).toBe(100);
+  rescuee.doUpdate(worldManager);
+  expect(rescuee.getAttachedObject().x).toBe(101);
 });
 
-test("rescuee moves in roaming direction when in ROAMING state", () => {
+test("movement doesn't get updated if rescuee isn't assigned to a helipad", () => {
+  expect(rescuee.getMovementState()).toBe(MovementState.ROAMING);
+  rescuee.setRoamingDirection(RoamingDirection.RIGHT);
+  expect(rescuee.getAttachedObject().x).toBe(100);
+  rescuee.doUpdate(worldManager);
+  expect(rescuee.getAttachedObject().x).toBe(100);
+})
 
+test("rescuee switches from RoamingDirection.LEFT to RoamingDirection.RIGHT when hitting helipad boundary", () => {
+  const pad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+  pad.assignRescuee(rescuee);
+
+  pad.setBoundaryEdge({ left: 99, right: 101 });
+
+  rescuee.setRoamingDirection(RoamingDirection.LEFT);
+  expect(rescuee.getAttachedObject().x).toBe(100);
+
+  rescuee.doUpdate(worldManager);  
+  expect(rescuee.getAttachedObject().x).toBe(99);
+  expect(rescuee.getRoamingDirection()).toBe(RoamingDirection.LEFT);
+
+  rescuee.doUpdate(worldManager);  
+  expect(rescuee.getAttachedObject().x).toBe(100);
+  expect(rescuee.getRoamingDirection()).toBe(RoamingDirection.RIGHT);
 });
 
-test("rescuee switches from ROAM_LEFT to ROAM_RIGHT when hitting helipad boundary", () => {
+test("rescuee switches from RoamingDirection.RIGHT to RoamingDirection.LEFT when hitting helipad boundary", () => {
+  const pad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+  });
+  pad.assignRescuee(rescuee);
 
-});
+  pad.setBoundaryEdge({ left: 99, right: 101 });
 
-test("rescuee switches from ROAM_RIGHT to ROAM_LEFT when hitting helipad boundary", () => {
+  rescuee.setRoamingDirection(RoamingDirection.RIGHT);
+  expect(rescuee.getAttachedObject().x).toBe(100);
 
+  rescuee.doUpdate(worldManager);  
+  expect(rescuee.getAttachedObject().x).toBe(101);
+  expect(rescuee.getRoamingDirection()).toBe(RoamingDirection.RIGHT);
+
+  rescuee.doUpdate(worldManager);  
+  expect(rescuee.getAttachedObject().x).toBe(100);
+  expect(rescuee.getRoamingDirection()).toBe(RoamingDirection.LEFT);
 });
 

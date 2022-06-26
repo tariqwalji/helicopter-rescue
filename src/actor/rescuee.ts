@@ -9,11 +9,17 @@ export enum MovementState {
   BOARDING,
 }
 
+export enum RoamingDirection {
+  LEFT,
+  RIGHT
+}
+
 export class Rescuee extends Movable {
   private speed: number = 1;
   private hasBeenRescued: boolean = false;
   private helipad?: Helipad;
   private movementState: MovementState = MovementState.ROAMING;
+  private roamingDirection: RoamingDirection = RoamingDirection.LEFT;
 
   getSpeed() {
     return this.speed;
@@ -35,6 +41,27 @@ export class Rescuee extends Movable {
         }
       } else {
         this.hasBeenRescued = true;
+      }
+    }
+    else if(this.movementState === MovementState.ROAMING) {
+      if(this.helipad) {
+        const helipadBoundary = this.helipad.getBoundaryEdge();
+        if (this.roamingDirection === RoamingDirection.LEFT && this.attachedObject.x <= helipadBoundary.left) {
+          this.attachedObject.x = helipadBoundary.left;
+          this.roamingDirection = RoamingDirection.RIGHT;
+        }
+
+        if (this.roamingDirection === RoamingDirection.RIGHT && this.attachedObject.x >= helipadBoundary.right) {
+          this.attachedObject.x = helipadBoundary.right;
+          this.roamingDirection = RoamingDirection.LEFT;
+        }
+
+        if (this.roamingDirection === RoamingDirection.LEFT) {
+          this.moveLeft(this.speed);
+        }
+        else {
+          this.moveRight(this.speed);
+        }  
       }
     }
     return true;
@@ -69,5 +96,11 @@ export class Rescuee extends Movable {
     if (originalPad) {
       originalPad.removeRescuee(this);
     }
+  }
+  getRoamingDirection() {
+    return this.roamingDirection;
+  }
+  setRoamingDirection(roamingDirection:RoamingDirection) {
+    this.roamingDirection = roamingDirection;
   }
 }
