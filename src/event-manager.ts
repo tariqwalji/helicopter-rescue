@@ -1,5 +1,5 @@
 export enum WorldEventType {
-  EVENT_PING
+  EVENT_PING,
 }
 
 export interface WorldEvent {
@@ -18,7 +18,7 @@ export class EventManager {
       callback: fn
     });
   }
-  fireEvent(eventType:WorldEventType) {
-    this.subscribers.filter((e) => e.eventType === eventType).forEach((e) => e.callback()); 
+  fireEvent(eventType:WorldEventType, props:object = {}) {
+    this.subscribers.filter((e) => e.eventType === eventType).forEach((e) => e.callback(props)); 
   }
 }

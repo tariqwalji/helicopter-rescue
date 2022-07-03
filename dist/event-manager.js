@@ -15,8 +15,9 @@ var EventManager = /** @class */ (function () {
             callback: fn
         });
     };
-    EventManager.prototype.fireEvent = function (eventType) {
-        this.subscribers.filter(function (e) { return e.eventType === eventType; }).forEach(function (e) { return e.callback(); });
+    EventManager.prototype.fireEvent = function (eventType, props) {
+        if (props === void 0) { props = {}; }
+        this.subscribers.filter(function (e) { return e.eventType === eventType; }).forEach(function (e) { return e.callback(props); });
     };
     return EventManager;
 }());
