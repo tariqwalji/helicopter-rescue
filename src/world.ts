@@ -1,6 +1,7 @@
 import { Player } from "./actor/player";
 import { Basic } from "./actor/base/basic";
 import { Helipad } from "./actor/helipad";
+import { EventManager, WorldEventType } from "./event-manager";
 
 export enum WorldObjectType {
   PLAYER,
@@ -18,7 +19,7 @@ export interface WorldObject {
 
 export class WorldManager {
   private world: Basic[];
-  constructor(private player: Player) {
+  constructor(private player: Player, private eventManager:EventManager) {
     this.world = [];
   }
   addActor(actor: Basic) {
@@ -38,17 +39,26 @@ export class WorldManager {
       (obj) => obj.getAttachedObject().objectType == objectType
     );
   }
+  getEventManager() {
+    return this.eventManager;
+  }
   fireHelipadCollisionEvent() {
     this.getActorsOfType(WorldObjectType.HELIPAD).forEach((obj) => {
       const pad = <Helipad>obj;
       if (this.player.isCollidedWith(pad)) {
         if (!this.player.hasCollidedWith(pad)) {
-          pad.handlePlayerTakeoffEvent(this.player);
+          this.eventManager.fireEvent(WorldEventType.EVENT_PLAYER_TAKEOFF, {
+            source: pad,
+            player: this.player
+          });
           this.player.removeCollidedObject(pad);
         }
       } else {
         if (this.player.hasCollidedWith(pad)) {
-          pad.handlePlayerLandedEvent(this.player);
+          this.eventManager.fireEvent(WorldEventType.EVENT_PLAYER_LANDED, {
+            source: pad,
+            player: this.player
+          });
           this.player.addCollidedObject(pad);
         }
       }

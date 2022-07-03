@@ -1,3 +1,4 @@
+import { EventManager, WorldEventType } from "../event-manager";
 import { WorldManager, WorldObject, WorldObjectType } from "../world";
 import { Helipad } from "./helipad";
 import { Player } from "./player";
@@ -14,7 +15,8 @@ beforeEach(() => {
       y: 100,
       width: 10,
       height: 10,
-    })
+    }),
+    new EventManager()
   );
 
   rescuee = new Rescuee({
@@ -288,3 +290,19 @@ test("rescuee switches from RoamingDirection.RIGHT to RoamingDirection.LEFT when
   expect(rescuee.getRoamingDirection()).toBe(RoamingDirection.LEFT);
 });
 
+test("rescuee can subscribe to events", () => {
+  const eventManager:EventManager = new EventManager();
+  const pad:Helipad = new Helipad({
+    objectType: WorldObjectType.HELIPAD,
+    x: 100,
+    y: 150,
+    width: 10,
+    height: 10,
+  });
+  
+  rescuee.subscribeToEvents(eventManager);
+  eventManager.fireEvent(WorldEventType.EVENT_PLAYER_LANDED, {
+    source: pad,
+    player: worldManager.getPlayer()
+  });
+});

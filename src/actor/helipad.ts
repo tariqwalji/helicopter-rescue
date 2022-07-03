@@ -2,6 +2,7 @@ import { WorldObject } from "../world";
 import { Basic } from "./base/basic";
 import { Rescuee } from "./rescuee";
 import { Player } from "./player";
+import { EventManager, WorldEventProps, WorldEventType } from "../event-manager";
 
 export enum LandingType {
   PICK_UP,
@@ -46,13 +47,9 @@ export class Helipad extends Basic {
   }
   handlePlayerLandedEvent(player: Player) {
     this.landedPlayer = player;
-    this.rescuees.forEach((rescuee) => rescuee.handlePlayerLandedEvent(player));
   }
   handlePlayerTakeoffEvent(player: Player) {
     this.landedPlayer = undefined;
-    this.rescuees.forEach((rescuee) =>
-      rescuee.handlePlayerTakeoffEvent(player)
-    );
   }
   isPickupPoint() {
     return this.landingType === LandingType.PICK_UP;
@@ -68,5 +65,9 @@ export class Helipad extends Basic {
   }
   setBoundaryEdge(boundaryEdge:BoundaryEdge) {
     this.boundaryEdge = boundaryEdge;
+  }
+  subscribeToEvents(eventManager:EventManager) {
+    eventManager.subscribe(WorldEventType.EVENT_PLAYER_LANDED, (props:WorldEventProps) => this.handlePlayerLandedEvent(props.player));
+    eventManager.subscribe(WorldEventType.EVENT_PLAYER_TAKEOFF, (props:WorldEventProps) => this.handlePlayerTakeoffEvent(props.player));
   }
 }

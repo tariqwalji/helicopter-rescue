@@ -2,9 +2,11 @@ import { WorldManager, WorldObject, WorldObjectType } from "./world";
 import { Player } from "./actor/player";
 import { Rescuee } from "./actor/rescuee";
 import { Helipad } from "./actor/helipad";
+import { EventManager } from "./event-manager";
 
 let world: WorldManager;
 let player: Player;
+let eventManager:EventManager;
 
 beforeEach(() => {
   let playerObject: WorldObject;
@@ -16,8 +18,9 @@ beforeEach(() => {
     height: 10,
   };
 
+  eventManager = new EventManager();
   player = new Player(playerObject);
-  world = new WorldManager(player);
+  world = new WorldManager(player, eventManager);
 });
 
 test("create empty world (exception of player)", () => {
@@ -26,6 +29,10 @@ test("create empty world (exception of player)", () => {
 
 test("world has a player", () => {
   expect(world.getPlayer()).toBeDefined();
+});
+
+test("world manages its own events", () => {
+  expect(world.getEventManager()).toBe(eventManager);
 });
 
 test("populate empty world with rescuee", () => {
@@ -95,6 +102,7 @@ test("fire helipad collision event - mark player landed", () => {
     width: 10,
     height: 10,
   });
+  pad.subscribeToEvents(world.getEventManager());
 
   world.addActor(pad);
 
@@ -114,6 +122,7 @@ test("fire helipad uncollided event - mark player unlanded", () => {
     width: 10,
     height: 10,
   });
+  pad.subscribeToEvents(world.getEventManager());
 
   world.addActor(pad);
 

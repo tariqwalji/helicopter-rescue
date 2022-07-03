@@ -17,6 +17,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Rescuee = exports.RoamingDirection = exports.MovementState = void 0;
 var movable_1 = require("./base/movable");
+var event_manager_1 = require("../event-manager");
 var MovementState;
 (function (MovementState) {
     MovementState[MovementState["ROAMING"] = 0] = "ROAMING";
@@ -120,6 +121,11 @@ var Rescuee = /** @class */ (function (_super) {
     };
     Rescuee.prototype.setRoamingDirection = function (roamingDirection) {
         this.roamingDirection = roamingDirection;
+    };
+    Rescuee.prototype.subscribeToEvents = function (eventManager) {
+        var _this = this;
+        eventManager.subscribe(event_manager_1.WorldEventType.EVENT_PLAYER_LANDED, function (props) { return _this.handlePlayerLandedEvent(props.player); });
+        eventManager.subscribe(event_manager_1.WorldEventType.EVENT_PLAYER_TAKEOFF, function (props) { return _this.handlePlayerTakeoffEvent(props.player); });
     };
     return Rescuee;
 }(movable_1.Movable));

@@ -1,10 +1,20 @@
+import { Basic } from "./actor/base/basic";
+import { Player } from "./actor/player";
+
 export enum WorldEventType {
   EVENT_PING,
+  EVENT_PLAYER_LANDED,
+  EVENT_PLAYER_TAKEOFF,
 }
 
 export interface WorldEvent {
   eventType:WorldEventType,
   callback:CallableFunction
+}
+
+export interface WorldEventProps {
+  source: Basic,
+  player: Player
 }
 
 export class EventManager { 
@@ -18,7 +28,7 @@ export class EventManager {
       callback: fn
     });
   }
-  fireEvent(eventType:WorldEventType, props:object = {}) {
+  fireEvent(eventType:WorldEventType, props:WorldEventProps) {
     this.subscribers.filter((e) => e.eventType === eventType).forEach((e) => e.callback(props)); 
   }
 }

@@ -17,6 +17,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Helipad = exports.LandingType = void 0;
 var basic_1 = require("./base/basic");
+var event_manager_1 = require("../event-manager");
 var LandingType;
 (function (LandingType) {
     LandingType[LandingType["PICK_UP"] = 0] = "PICK_UP";
@@ -53,13 +54,9 @@ var Helipad = /** @class */ (function (_super) {
     };
     Helipad.prototype.handlePlayerLandedEvent = function (player) {
         this.landedPlayer = player;
-        this.rescuees.forEach(function (rescuee) { return rescuee.handlePlayerLandedEvent(player); });
     };
     Helipad.prototype.handlePlayerTakeoffEvent = function (player) {
         this.landedPlayer = undefined;
-        this.rescuees.forEach(function (rescuee) {
-            return rescuee.handlePlayerTakeoffEvent(player);
-        });
     };
     Helipad.prototype.isPickupPoint = function () {
         return this.landingType === LandingType.PICK_UP;
@@ -75,6 +72,11 @@ var Helipad = /** @class */ (function (_super) {
     };
     Helipad.prototype.setBoundaryEdge = function (boundaryEdge) {
         this.boundaryEdge = boundaryEdge;
+    };
+    Helipad.prototype.subscribeToEvents = function (eventManager) {
+        var _this = this;
+        eventManager.subscribe(event_manager_1.WorldEventType.EVENT_PLAYER_LANDED, function (props) { return _this.handlePlayerLandedEvent(props.player); });
+        eventManager.subscribe(event_manager_1.WorldEventType.EVENT_PLAYER_TAKEOFF, function (props) { return _this.handlePlayerTakeoffEvent(props.player); });
     };
     return Helipad;
 }(basic_1.Basic));

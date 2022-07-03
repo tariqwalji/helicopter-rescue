@@ -3,6 +3,7 @@ import { Movable } from "./base/movable";
 import { Basic } from "./base/basic";
 import { Helipad } from "./helipad";
 import { Player } from "./player";
+import { EventManager, WorldEventProps, WorldEventType } from "../event-manager";
 
 export enum MovementState {
   ROAMING,
@@ -102,5 +103,9 @@ export class Rescuee extends Movable {
   }
   setRoamingDirection(roamingDirection:RoamingDirection) {
     this.roamingDirection = roamingDirection;
+  }
+  subscribeToEvents(eventManager:EventManager) {
+    eventManager.subscribe(WorldEventType.EVENT_PLAYER_LANDED, (props:WorldEventProps) => this.handlePlayerLandedEvent(props.player));
+    eventManager.subscribe(WorldEventType.EVENT_PLAYER_TAKEOFF, (props:WorldEventProps) => this.handlePlayerTakeoffEvent(props.player));
   }
 }

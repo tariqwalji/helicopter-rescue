@@ -4,6 +4,8 @@ exports.EventManager = exports.WorldEventType = void 0;
 var WorldEventType;
 (function (WorldEventType) {
     WorldEventType[WorldEventType["EVENT_PING"] = 0] = "EVENT_PING";
+    WorldEventType[WorldEventType["EVENT_PLAYER_LANDED"] = 1] = "EVENT_PLAYER_LANDED";
+    WorldEventType[WorldEventType["EVENT_PLAYER_TAKEOFF"] = 2] = "EVENT_PLAYER_TAKEOFF";
 })(WorldEventType = exports.WorldEventType || (exports.WorldEventType = {}));
 var EventManager = /** @class */ (function () {
     function EventManager() {
@@ -16,7 +18,6 @@ var EventManager = /** @class */ (function () {
         });
     };
     EventManager.prototype.fireEvent = function (eventType, props) {
-        if (props === void 0) { props = {}; }
         this.subscribers.filter(function (e) { return e.eventType === eventType; }).forEach(function (e) { return e.callback(props); });
     };
     return EventManager;
